@@ -15,6 +15,7 @@ services:
       - gateway-activation-token
       - gateway-admin-password
     environment:
+      DISABLE_QUICKSTART: true
       ACCEPT_IGNITION_EULA: "Y"
       IGNITION_EDITION: maker
       IGNITION_ACTIVATION_TOKEN_FILE: /run/secrets/gateway-activation-token
