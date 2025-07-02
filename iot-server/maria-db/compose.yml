@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_USER: ignition
+      MARIADB_PASSWORD_FILE: /run/secrets/db-ignition-password
+      MARIADB_DATABASE: ignition
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
+    secrets:
+      - db-root-password
+      - db-ignition-password
+    volumes:
+      - db-data:/var/lib/mysql
+
+secrets:
+  db-ignition-password:
+    file: ./secrets/DB_IGNITION_PASSWORD
+  db-root-password:
+    file: ./secrets/DB_ROOT_PASSWORD
+
+volumes:
+  db-data:
