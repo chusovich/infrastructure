@@ -19,10 +19,10 @@ services:
       ACCEPT_IGNITION_EULA: "Y"
       IGNITION_EDITION: maker
       IGNITION_ACTIVATION_TOKEN_FILE: /run/secrets/gateway-activation-token
-      IGNITION_LICENSE_KEY: T3XN-W83P
+      IGNITION_LICENSE_KEY: R6H2-OL8U
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
     command: >
-      -n Ignition-maker-test
+      -n automation-server
 
 secrets:
   gateway-activation-token:
