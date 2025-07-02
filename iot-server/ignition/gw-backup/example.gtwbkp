@@ -1,0 +1,4 @@
+# this woudl actually be a gateway backup file??
+
+see
+BASE_GWBK_NAME: gateway.gwbk on the main gateway's docker compose
