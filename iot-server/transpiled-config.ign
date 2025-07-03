@@ -6,9 +6,7 @@
     "users": [
       {
         "name": "core",
-        "sshAuthorizedKeys": [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICur/CDXrbHFGPlIraA5xFoM1sH+Myc9/70fGllsR1VZ caleb@caleb_laptop"
-        ]
+        "passwordHash": "$y$j9T$HmpHDgjtRnv.GZIpsN7e5/$Z2qnqN8iR2bL9UR6BGzQDEwOoM1KUipch0DqH2NG.XC"
       }
     ]
   },

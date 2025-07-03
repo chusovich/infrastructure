@@ -3,8 +3,7 @@ version: 1.4.0
 passwd:
   users:
     - name: core
-      ssh_authorized_keys:
-        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICur/CDXrbHFGPlIraA5xFoM1sH+Myc9/70fGllsR1VZ caleb@caleb_laptop
+      password_hash: $y$j9T$HmpHDgjtRnv.GZIpsN7e5/$Z2qnqN8iR2bL9UR6BGzQDEwOoM1KUipch0DqH2NG.XC
 
 storage:
   directories:
