@@ -1,6 +1,7 @@
 services:
   db:
-    image: mariadb:latest
+    image: mariadb:11.4
+    container_name: ignition-database
     ports:
       - 3306:3306
     environment:
@@ -12,7 +13,7 @@ services:
       - db-root-password
       - db-ignition-password
     volumes:
-      - db-data2:/var/lib/mysql
+      - ./db-data:/var/lib/mysql
 
 secrets:
   db-ignition-password:
@@ -21,4 +22,4 @@ secrets:
     file: ./secrets/DB_ROOT_PASSWORD
 
 volumes:
-  db-data2:
+  db-data:

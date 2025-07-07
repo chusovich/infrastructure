@@ -1,2 +1,3 @@
 iot-server/traefik/certs/acme.json
-app-server/homebox/hb-data/*
+
+**/secrets/

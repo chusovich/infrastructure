@@ -10,7 +10,7 @@ services:
       - 9043:8043
       - 1883:1883
     volumes:
-      - gw-data:/usr/local/bin/ignition/data
+      - ./gw-data:/usr/local/bin/ignition/data
     secrets:
       - gateway-activation-token
       - gateway-admin-password
@@ -19,9 +19,9 @@ services:
       ACCEPT_IGNITION_EULA: "Y"
       IGNITION_EDITION: maker
       IGNITION_ACTIVATION_TOKEN_FILE: /run/secrets/gateway-activation-token
-      IGNITION_LICENSE_KEY: GD7A-TXV7
+      IGNITION_LICENSE_KEY: 6QQ5-HE17
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
-    command: >
+    command:
       -n home-automation
 
 secrets:
