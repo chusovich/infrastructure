@@ -1,0 +1,69 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v2.8.0 # 
+    container_name: mealie
+    restart: always
+    #ports:
+    #    - "9925:9000" # 
+    deploy:
+      resources:
+        limits:
+          memory: 1000M # 
+    volumes:
+      - mealie-data:/app/data/
+    environment:
+      # Set Backend ENV Variables Here
+      ALLOW_SIGNUP: "false"
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Anchorage
+      BASE_URL: https://mealie.apps.husovich.com
+      # Database Settings
+      DB_ENGINE: postgres
+      POSTGRES_USER: mealie
+      POSTGRES_PASSWORD: mealie
+      POSTGRES_SERVER: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: mealie
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      traefik-apps:  
+    labels:
+      traefik.enable: true
+      # HTTP
+      traefik.http.routers.mealie.entrypoints: http
+      traefik.http.routers.mealie.rule: Host(`mealie.apps.husovich.com`)
+      traefik.http.routers.mealie.middlewares: traefik-https-redirect
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
+      # HTTPS
+      traefik.http.routers.mealie-secure.entrypoints: https
+      traefik.http.routers.mealie-secure.rule: Host(`mealie.apps.husovich.com`)
+      traefik.http.routers.mealie-secure.tls.certresolver: myresolver
+
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    restart: always
+    volumes:
+      - mealie-pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mealie
+      POSTGRES_USER: mealie
+      PGUSER: mealie
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      traefik-apps:
+
+volumes:
+  mealie-data:
+  mealie-pgdata:
+
+networks:
+  traefik-apps:
+    external: true  

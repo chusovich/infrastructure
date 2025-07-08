@@ -30,7 +30,7 @@ services:
       - 443:443
       - 8080:8080
     networks:
-      traefik:
+      traefik-apps:
     environment:
       CF_API_EMAIL: calebmhusovich@gmail.com
       CF_API_KEY: 4907df3e68220f4634b3fb09920854c0776d4
@@ -40,20 +40,38 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.traefik.entrypoints: http
-      traefik.http.routers.traefik.rule: Host(`traefik.husovich.com`)
+      traefik.http.routers.traefik.rule: Host(`traefik.apps.husovich.com`)
       traefik.http.middlewares.traefik-auth.basicauth.users: admin:$$apr1$$Qkdo5P0o$$O4MSg6vcS6wLznMIE43wr.
       traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
       traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto: https
       traefik.http.routers.traefik.middlewares: traefik-https-redirect
       traefik.http.routers.traefik-secure.entrypoints: https
-      traefik.http.routers.traefik-secure.rule: Host(`traefik.husovich.com`)
+      traefik.http.routers.traefik-secure.rule: Host(`traefik.apps.husovich.com`)
       traefik.http.routers.traefik-secure.middlewares: traefik-auth
       traefik.http.routers.traefik-secure.tls: true
       traefik.http.routers.traefik-secure.tls.certresolver: myresolver
       traefik.http.routers.traefik-secure.tls.domains[0].main: husovich.com
-      traefik.http.routers.traefik-secure.tls.domains[0].sans: "*.husovich.com"
+      traefik.http.routers.traefik-secure.tls.domains[0].sans: "*.apps.husovich.com"
       traefik.http.routers.traefik-secure.service: api@internal
 
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      traefik-apps:
+    labels:
+      traefik.enable: true
+      # HTTP
+      traefik.http.routers.whoami.entrypoints: http
+      traefik.http.routers.whoami.rule: Host(`whoami.apps.husovich.com`)
+      traefik.http.routers.whoami.middlewares: traefik-https-redirect
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
+      # HTTPS
+      traefik.http.routers.whoami-secure.entrypoints: https
+      traefik.http.routers.whoami-secure.rule: Host(`whoami.apps.husovich.com`)
+      traefik.http.routers.whoami-secure.tls.certresolver: myresolver
+
 networks:
-  traefik:
-    external: true
+  traefik-apps:
+    external: true  

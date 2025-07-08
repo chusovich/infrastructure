@@ -13,12 +13,12 @@ services:
        traefik.enable: true
        # HTTP
        traefik.http.routers.actual-budget.entrypoints: http
-       traefik.http.routers.actual-budget.rule: Host(`actual-budget.husovich.com`)
+       traefik.http.routers.actual-budget.rule: Host(`budget.apps.husovich.com`)
        traefik.http.routers.actual-budget.middlewares: traefik-https-redirect
        traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
        # HTTPS
        traefik.http.routers.actual-budget-secure.entrypoints: https
-       traefik.http.routers.actual-budget-secure.rule: Host(`actual-budget.husovich.com`)
+       traefik.http.routers.actual-budget-secure.rule: Host(`budget.apps.husovich.com`)
        traefik.http.routers.actual-budget-secure.tls.certresolver: myresolver
 
 networks:
