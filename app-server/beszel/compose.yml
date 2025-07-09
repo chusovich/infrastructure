@@ -3,13 +3,13 @@ services:
     image: henrygd/beszel:latest
     container_name: beszel
     restart: unless-stopped
-    #ports:
+    # ports:
     #  - 8090:8090
     volumes:
       - ./beszel_data:/beszel_data
       - ./beszel_socket:/beszel_socket
     networks:
-      traefik-apps:
+      traefik:  
     labels:
       traefik.enable: true
       # HTTP
@@ -33,8 +33,8 @@ services:
       # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
     environment:
       LISTEN: 45876
-      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILqazQkVZmolKRZUabvOyBwRlNxEPLEY5pkL12bFpMZC"
+      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3"
 
 networks:
-  traefik-apps:
-    external: true  
+  traefik:
+    external: true

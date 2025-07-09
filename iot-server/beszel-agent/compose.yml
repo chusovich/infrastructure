@@ -11,4 +11,4 @@ services:
       # - /mnt/disk1/.beszel:/extra-filesystems/disk1:ro
     environment:
       LISTEN: 45876
-      KEY: '<public key>'
+      KEY: "    "

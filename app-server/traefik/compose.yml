@@ -30,10 +30,10 @@ services:
       - 443:443
       - 8080:8080
     networks:
-      traefik-apps:
+      traefik:
     environment:
       CF_API_EMAIL: calebmhusovich@gmail.com
-      CF_API_KEY: 4907df3e68220f4634b3fb09920854c0776d4
+      CF_API_KEY: g95l2Vw6By97PIGMfYTOF48j2fjZPIisZhszHhML
     volumes:
       - ./certs:/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -59,7 +59,7 @@ services:
     container_name: whoami
     restart: unless-stopped
     networks:
-      traefik-apps:
+      traefik:
     labels:
       traefik.enable: true
       # HTTP
@@ -73,5 +73,5 @@ services:
       traefik.http.routers.whoami-secure.tls.certresolver: myresolver
 
 networks:
-  traefik-apps:
+  traefik:
     external: true  

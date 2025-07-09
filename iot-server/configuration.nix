@@ -75,10 +75,43 @@
     extraUpFlags = [
       "--ssh" 
       "--hostname=iot-server"
-      "--taildrop"
     ];		
   };
   
+services.caddy = {
+    enable = true;
+    virtualHosts."mqtt.iot.husovich.com".extraConfig = ''
+      reverse_proxy http://localhost:8096
+      
+      tls /var/lib/acme/husovich.com/cert.pem /var/lib/acme/husovich.com/key.pem {
+        protocols tls1.3
+      }
+    '';
+    virtualHosts."gw.iot.husovich.com".extraConfig = ''
+      reverse_proxy http://localhost:2283
+      
+      tls /var/lib/acme/husovich.com/cert.pem /var/lib/acme/husovich.com/key.pem {
+        protocols tls1.3
+      }
+    '';
+  };
+
+security.acme = {
+    acceptTerms = true;
+    defaults.email = "calebmhusovich@gmail.com";
+    certs."husovich.com" = {
+      group = config.services.caddy.group;
+      domain = "husovich.com";
+      extraDomainNames = [ "*.iot.husovich.com" ];
+      dnsProvider = "cloudflare";
+      dnsResolver = "1.1.1.1:53";
+      dnsPropagationCheck = true;
+      environmentFile = "${pkgs.writeText "cloudflare-creds" ''
+        CLOUDFLARE_DNS_API_TOKEN=g95l2Vw6By97PIGMfYTOF48j2fjZPIisZhszHhML
+      ''}";
+    };
+  };
+
   # Virtualization
   virtualisation = {
     docker = {

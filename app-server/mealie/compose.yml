@@ -4,7 +4,7 @@ services:
     container_name: mealie
     restart: always
     #ports:
-    #    - "9925:9000" # 
+    #    - 9925:9000
     deploy:
       resources:
         limits:
@@ -29,7 +29,8 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      traefik-apps:  
+      traefik:
+      mealie:
     labels:
       traefik.enable: true
       # HTTP
@@ -58,12 +59,13 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      traefik-apps:
+      mealie:
 
 volumes:
   mealie-data:
   mealie-pgdata:
 
 networks:
-  traefik-apps:
+  traefik:
     external: true  
+  mealie:
