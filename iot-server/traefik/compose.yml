@@ -54,6 +54,24 @@ services:
       traefik.http.routers.traefik-secure.tls.domains[0].sans: "*.husovich.com"
       traefik.http.routers.traefik-secure.service: api@internal
 
+  whoami:
+    image: traefik/whoami:latest
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      # HTTP
+      traefik.http.routers.whoami.entrypoints: http
+      traefik.http.routers.whoami.rule: Host(`whoami.husovich.com`)
+      traefik.http.routers.whoami.middlewares: traefik-https-redirect
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
+      # HTTPS
+      traefik.http.routers.whoami-secure.entrypoints: https
+      traefik.http.routers.whoami-secure.rule: Host(`whoami.husovich.com`)
+      traefik.http.routers.whoami-secure.tls.certresolver: myresolver
+
 networks:
   traefik:
     external: true
