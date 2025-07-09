@@ -1,0 +1,30 @@
+services:
+  cmh-app:
+    image: robiningelbrecht/strava-statistics:latest
+    container_name: cmh-stats-for-strava
+    restart: unless-stopped
+    volumes:
+      - ./config:/var/www/config/app
+      - ./build:/var/www/build
+      - ./storage/database:/var/www/storage/database
+      - ./storage/files:/var/www/storage/files
+    env_file: ./.env
+    # ports:
+    #   - 8080:8080
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      # HTTP
+      traefik.http.routers.strava-stats.entrypoints: http
+      traefik.http.routers.strava-stats.rule: Host(`cmh-strava-stats.apps.husovich.com`)
+      traefik.http.routers.strava-stats.middlewares: traefik-https-redirect
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
+      # HTTPS
+      traefik.http.routers.strava-stats-secure.entrypoints: https
+      traefik.http.routers.strava-stats-secure.rule: Host(`cmh-strava-stats.apps.husovich.com`)
+      traefik.http.routers.strava-stats-secure.tls.certresolver: myresolver
+
+networks:
+  traefik:
+    external: true  

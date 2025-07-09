@@ -14,12 +14,18 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # ZFS
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.extraPools = [ "media-pool" ];
+  services.zfs.autoScrub.enable = true;
+
+  # Networking
   networking = {
-    networkmanager.enable = true; # enable networking
-    hostName = "app-server"; # Define your hostname
-    # wireless.enable = true;  # Enables wireless support via wpa_supplicant    
+    networkmanager.enable = true;
+    hostName = "app-server";
+    hostId = "4e24220d"; # for ZFS
     firewall.enable = false;
-   };
+  };
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -49,7 +55,7 @@
   users.users.calebh = {
     isNormalUser = true;
     description = "Caleb Husovich";
-    extraGroups = [ "networkmanager" "wheel" "docker"];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [];
   };
 
@@ -57,8 +63,8 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   ];
-
-  # List services that you want to enable:
+  
+  # SSH
   services.openssh = {
     enable = true;
     settings = {
@@ -66,25 +72,23 @@
       PermitRootLogin = "yes";
     };
   };
-
+  
+  # Tailscale
   services.tailscale = {
     enable = true;
     authKeyFile = "/home/calebh/secrets/tailscale_key";
     extraUpFlags = [
-      "--ssh" 
+      "--ssh"
       "--hostname=app-server"
-      "--taildrop"
-    ];		
+    ];
   };
-  
+
   # Virtualization
-  virtualisation = {
-    docker = {
+  virtualisation.docker = {
+    enable = true;
+    autoPrune = {
       enable = true;
-      autoPrune = {
-        enable = true;
-        dates = "weekly";
-      };
+      dates = "weekly";
     };
   };
 

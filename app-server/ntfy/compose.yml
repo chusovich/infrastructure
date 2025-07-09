@@ -1,0 +1,35 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    restart: unless-stopped
+    environment:
+      NTFY_BASE_URL: http://ntfy.apps.husovich.com
+      NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
+      NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all
+      NTFY_BEHIND_PROXY: true
+      NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
+      NTFY_ENABLE_LOGIN: true
+      NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
+    volumes:
+      - ./:/var/lib/ntfy
+    # ports:
+    #   - 8093:80
+    command: serve
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      # HTTP
+      traefik.http.routers.ntfy.entrypoints: http
+      traefik.http.routers.ntfy.rule: Host(`ntfy.apps.husovich.com`)
+      traefik.http.routers.ntfy.middlewares: traefik-https-redirect
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
+      # HTTPS
+      traefik.http.routers.ntfy-secure.entrypoints: https
+      traefik.http.routers.ntfy-secure.rule: Host(`ntfy.apps.husovich.com`)
+      traefik.http.routers.ntfy-secure.tls.certresolver: myresolver
+
+networks:
+  traefik:
+    external: true  
