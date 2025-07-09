@@ -62,8 +62,17 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    wget
   ];
+
+  # Enable cron
+  services.cron.enable = true;
   
+  # run strava import cron job (every monday at 3:30am)
+  services.cron.systemCronJobs = [
+    "30 3 * * 1 /home/calebh/infra/cmh-stats-for-strava/import-script.sh"
+  ];
+
   # SSH
   services.openssh = {
     enable = true;
