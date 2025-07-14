@@ -20,6 +20,7 @@ in
     virtualisation.docker.enable = true;
     virtualisation.oci-containers.backend = "docker";
 
+    # Traefik container
     virtualisation.oci-containers.containers.traefik = {
       image = "traefik:v3.1";
       hostname = "traefik";
@@ -77,6 +78,7 @@ in
       };
     };
     
+    # whoami container (for debugging)
     virtualisation.oci-containers.containers.whoami = {
       image = "traefik/whoami";
       hostname = "whoami";
@@ -104,6 +106,19 @@ in
         "traefik.http.services.whoami.loadbalancer.server.port" = "80";
       };
     };
+
+    # # Make sure we have the docker package so we can create the docker network
+    # environment.systemPackages = with pkgs; [ docker ];
+
+    # # Ensure docker network "traefik" exists
+    # system.activationScripts.createDockerNetworkTraefik = ''
+    # if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
+    #   echo "Network exists"
+    # else
+    #   ${pkgs.docker}/bin/docker network create traefik
+    # fi
+    # '';
+
   };
 }
 
