@@ -2,42 +2,34 @@ services:
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
-    restart: always
+    restart: unless-stopped
     environment:
-      DOMAIN: "https://vault.apps.husovich.com"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
-      SIGNUPS_ALLOWED: "true" # Deactivate this with "false" after you have created your account so that no strangers can register
+      DOMAIN: "https://passwords.apps.husovich.com"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
+      # SIGNUPS_ALLOWED: "true" # Deactivate this with "false" after you have created your account so that no strangers can register
     volumes:
       - ./vw-data:/data # the path before the : can be changed
-    ports:
-      - 11001:80 # you can replace the 11001 with your preferred port
+    # ports:
+    #   - 11001:80 # you can replace the 11001 with your preferred port
     networks:
       traefik:
-    # labels:
-    #   traefik.enable: true
-    #   # HTTP
-    #   traefik.http.routers.vaultwarden.entrypoints: http
-    #   traefik.http.routers.vaultwarden.rule: Host(`vault.apps.husovich.com`)
-    #   traefik.http.routers.vaultwarden.middlewares: traefik-https-redirect
-    #   traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
-    #   # HTTPS
-    #   traefik.http.routers.vaultwarden-secure.entrypoints: https
-    #   traefik.http.routers.vaultwarden-secure.rule: Host(`vaultw.apps.husovich.com`)
-    #   traefik.http.routers.vaultwarden-secure.tls.certresolver: myresolver
-
-
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
+      # HTTP
+      - traefik.http.routers.vaultwarden-http.rule=Host(`passwords.apps.husovich.com`)
+      - traefik.http.routers.vaultwarden-http.entrypoints=http
+      - traefik.http.routers.vaultwarden-http.service=vaultwarden
+      - traefik.http.routers.vaultwarden-http.middlewares=redirect-https
+      # HTTP Redirect
       - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
       - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
-      - traefik.http.routers.vaultwarden-https.rule=Host(`vault.apps.husovich.com`)
+      # HTTPS
+      - traefik.http.routers.vaultwarden-https.rule=Host(`passwords.apps.husovich.com`)
       - traefik.http.routers.vaultwarden-https.entrypoints=https
-      - traefik.http.routers.vaultwarden-https.tls=true
       - traefik.http.routers.vaultwarden-https.service=vaultwarden
-      - traefik.http.routers.vaultwarden-http.rule=Host(`vault.apps.husovich.com`)
-      - traefik.http.routers.vaultwarden-http.entrypoints=http
-      - traefik.http.routers.vaultwarden-http.middlewares=redirect-https
-      - traefik.http.routers.vaultwarden-http.service=vaultwarden
+      - traefik.http.routers.vaultwarden-https.tls=true
+      - traefik.http.routers.vaultwarden-https.tls.certresolver=myresolver
+      # Load Balancer      
       - traefik.http.services.vaultwarden.loadbalancer.server.port=80
 
 networks:
