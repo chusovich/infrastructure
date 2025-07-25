@@ -27,7 +27,7 @@ services:
       traefik.http.routers.gotify.rule: Host(`gotify.husovich.com`)
       traefik.http.services.gotify.loadbalancer.server.port: "80"
     networks:
-      default: 
+      gotify: 
       traefik:
 
   igotify-notification: # (iGotify-Notification-Assistent)

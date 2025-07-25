@@ -1,0 +1,45 @@
+services:
+  # Traefik reverse proxy
+  traefik:
+    extends: 
+      file: ../containers/traefik.yml
+      service: traefik
+    profiles:
+      - proxy
+      - proxy_debug
+    environment:
+      CF_DNS_API_TOKEN: /run/secrets/cf-dns-api-token
+    labels:
+      traefik.http.routers.traefik.rule: Host(`traefik.services.husovich.com`)
+      traefik.http.routers.traefik-secure.rule: Host(`traefik.services.husovich.com`)
+      traefik.http.routers.traefik-secure.tls.domains[0].sans: "*.services.husovich.com"
+
+  # Traefik Debugging Container
+  whoami:
+    extends:
+      file: ../containers/traefik.yml
+      service: whoami
+    profiles:
+      - proxy_debug
+    labels:
+      traefik.http.routers.whoami-secure.rule: Host(`whoami.services.husovich.com`)
+      traefik.http.routers.whoami.rule: Host(`whoami.services.husovich.com`)
+
+  # Beszel agent for system monitoring
+  beszel-agent:
+    extends: 
+      file: ../containers/beszel-agent.yml
+      service: beszel-agent
+    profiles:
+      - monitoring
+    environment:
+      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3"
+      
+# Secrets - passwords, api tokens, etc.
+secrets:
+  cf-dns-api-token:
+    file: ../my_secrets/CF_DNS_API_TOKEN
+
+networks:
+  traefik:
+    external: true
