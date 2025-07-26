@@ -30,7 +30,7 @@ services:
       - gotify 
       - traefik
 
-  igotify-notification: # (iGotify-Notification-Assistent)
+  igotify: # (iGotify-Notification-Assistent)
     container_name: igotify
     hostname: igotify
     image: ghcr.io/androidseb25/igotify-notification-assist:latest

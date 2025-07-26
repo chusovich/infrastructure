@@ -6,9 +6,9 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      # ./raspi-fan
+    [ 
+      ./hardware-configuration.nix # Include the results of the hardware scan.
+      ../nix/housekeeping.nix # auto-updates, garbage collection
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
