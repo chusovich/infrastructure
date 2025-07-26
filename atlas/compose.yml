@@ -9,6 +9,9 @@ services:
       - proxy_debug
     environment:
       CF_DNS_API_TOKEN: /run/secrets/cf-dns-api-token
+    volumes:
+      - ./certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       traefik.http.routers.traefik.rule: Host(`traefik.services.husovich.com`)
       traefik.http.routers.traefik-secure.rule: Host(`traefik.services.husovich.com`)
@@ -34,12 +37,49 @@ services:
       - monitoring
     environment:
       KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3"
-      
+  
+  beszel-hub:
+    extends:
+      file: ../containers/beszel-hub.yml
+      service: beszel-hub
+    profiles:
+      - monitoring
+    volumes:
+      - ./data/beszel/data:/beszel_data
+      - ./data/beszel/socket:/beszel_socket
+
+# Gotify/iGotify notification services
+  gotify:
+    extends:
+      file: ../containers/gotify.yml
+      service: gotify
+    profiles:
+      - notifications
+    image: gotify/server-arm64
+    volumes:
+      - ./data/gotify:/app/data
+    labels:
+      traefik.http.routers.gotify.rule: Host(`gotify.services.husovich.com`)
+      traefik.http.routers.gotify-secure.rule: Host(`gotify.services.husovich.com`)
+
+  igotify:
+    extends:
+      file: ../containers/gotify.yml
+      service: igotify
+    profiles:
+      - notifications
+    volumes:
+      - ./data/igotify:/app/data 
+    labels:
+      traefik.http.routers.igotify.rule: Host(`igotify.services.husovich.com`)
+      traefik.http.routers.igotify-secure.rule: Host(`igotify.services.husovich.com`)
+
 # Secrets - passwords, api tokens, etc.
 secrets:
   cf-dns-api-token:
-    file: ../my_secrets/CF_DNS_API_TOKEN
+    file: ./secrets/CF_DNS_API_TOKEN
 
 networks:
+  gotify:
   traefik:
     external: true

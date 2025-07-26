@@ -8,9 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./beszel-agent.nix # beszel monitoring container
-      ./traefik.nix # traefik reverse proxy
-      ./glance.nix # glance (dashboard)
+      # ./raspi-fan
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -22,7 +20,7 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking = {
     firewall.enable = false;
-    hostName = "raspberry-nix";
+    hostName = "atlas";
     interfaces = {
       end0 = {
         useDHCP = false;
@@ -42,15 +40,13 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.calebh = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-    
-    ];
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user and add to the docker group
+    packages = with pkgs; [ ];
   };
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-    docker
+    git
   ];
 
   # List services that you want to enable:
@@ -77,26 +73,13 @@
     };
   };
 
-  virtualisation.oci-containers.backend = "docker";
-
-  services.beszel-agent = {
-    enable = true;
-    sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3";
-  };
-
-  services.myGlance.enable = true;
-
-  services.myTraefik = {
-    enable = true;
-    cloudflareDnsApiToken = "Jok78JgWv3UaNFkfHTOqN7bkFE37oB9CI0rwH8BY";
-  };
-
+  # Ensure docker network "traefik" exists
   system.activationScripts.createDockerNetworkTraefik = ''
-    if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
-      echo "Network exists"
-    else
-      ${pkgs.docker}/bin/docker network create traefik
-    fi
+  if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
+    echo "Network exists"
+  else
+    ${pkgs.docker}/bin/docker network create traefik
+  fi
   '';
 
   # Copy the NixOS configuration file and link it from the resulting system

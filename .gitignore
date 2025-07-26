@@ -1,3 +1,6 @@
-iot-server/traefik/certs/acme.json
-
+# ignore all folders named "secrets" and "certs"
 **/secrets/
+**/certs
+
+# ignore docker volumes for atlas
+/atlas/data
