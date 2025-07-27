@@ -11,6 +11,19 @@
       ../nix/housekeeping.nix # auto-updates, garbage collection
     ];
 
+  # Enable flakes
+  # nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Build on a remote host
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "app-server";
+      sshUser = "builder";
+      system = "aarch64-linux";
+    }
+  ];
+  
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
   # Enables the generation of /boot/extlinux/extlinux.conf
@@ -40,7 +53,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.calebh = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user and add to the docker group
+    extraGroups = [ "network manager" "wheel" "docker" ]; # Enable ‘sudo’ for the user and add to the docker group
     packages = with pkgs; [ ];
   };
 
@@ -60,7 +73,8 @@
     authKeyFile = "/home/calebh/secrets/tailscale_key";
     extraUpFlags = [
       "--ssh"
-      # "--reset"
+      "--reset"
+      "--advertise-tags tag:server"
     ];
   };
 
