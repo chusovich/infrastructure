@@ -14,10 +14,10 @@ services:
       traefik.enable: 'true'
       # HTTP
       traefik.http.routers.beszel-web.entrypoints: http
-      traefik.http.routers.beszel-web.rule: Host(`beszel.apps.husovich.com`)
+      traefik.http.routers.beszel-web.rule: Host(`beszel.subdomain.husovich.com`)
       traefik.http.routers.beszel-web.middlewares: traefik-https-redirect
       traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: https
       # HTTPS
       traefik.http.routers.beszel-websecure.entrypoints: https
-      traefik.http.routers.beszel-websecure.rule: Host(`beszel.apps.husovich.com`)
+      traefik.http.routers.beszel-websecure.rule: Host(`beszel.subdomain.husovich.com`)
       traefik.http.routers.beszel-websecure.tls.certresolver: myresolver

@@ -47,6 +47,9 @@ services:
     volumes:
       - ./data/beszel/data:/beszel_data
       - ./data/beszel/socket:/beszel_socket
+    labels:
+      traefik.http.routers.beszel-web.rule: Host(`beszel.services.husovich.com`)
+      traefik.http.routers.beszel-websecure.rule: Host(`beszel.services.husovich.com`)
 
 # Gotify/iGotify notification services
   gotify:
