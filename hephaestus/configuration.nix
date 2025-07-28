@@ -4,10 +4,11 @@
 
 { config, pkgs, ... }:
 
-{a
+{
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../nix/housekeeping.nix
     ];
 
   # Enable flakes
