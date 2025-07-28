@@ -3,9 +3,11 @@ services:
     extends: 
       file: ./containers/traefik/compose.yml
       service: traefik
+    profiles:
+      - proxy
+      - proxy-debug
     environment:
       CF_DNS_API_TOKEN: /run/secrets/cf-dns-api-token
-
     labels:
       traefik.http.routers.traefik-secure.tls.domain[0].sans: "*.iot.husovich.com"
       traefik.http.routers.traefik.rule: Host(`traefik.iot.husovich.com`)
@@ -15,10 +17,12 @@ services:
     extends:
       file: ./containers/traefik/compose.yml
       service: whoami
+    profiles:
+      - proxy-debug
     labels:
       traefik.http.routers.whoami-web.rule: Host(`whoami.iot.husovich.com`)
       traefik.http.routers.whoami-websecure.rule: Host(`whoami.iot.husovich.com`)
 
 secrets:
   cf-dns-api-token:
-    file: ./secrets/CF_DNS_API_TOKEN
+    file: ../secrets/CF_DNS_API_TOKEN

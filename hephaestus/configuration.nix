@@ -4,18 +4,24 @@
 
 { config, pkgs, ... }:
 
-{
+{a
   imports =
-    [ 
-      ./hardware-configuration.nix # Include the results of the hardware scan.
-      ./modules/beszel-agent.nix
-      ./modules/traefik.nix
-      ./modules/ha.nix
-      ./modules/zigbee2mqtt.nix
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
     ];
 
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Build on a remote host
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "app-server";
+      sshUser = "builder";
+      system = "x86_64-linux";
+    }
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -52,7 +58,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
-    gh
   ];
 
   # Virtualization
@@ -75,14 +80,9 @@
     authKeyFile = "/home/calebh/secrets/tailscale_key";
     extraUpFlags = [
       "--ssh" 
-      "--hostname=hephaestus"
+      "--advertise-tags tag:server"
+      "--reset"
     ];		
-  };
-  
-  # Enable traefik remote proxy
-  my-containers.traefik = {
-    enable = true;
-    cloudflareDnsApiToken = "Jok78JgWv3UaNFkfHTOqN7bkFE37oB9CI0rwH8BY";
   };
 
   # Create remote proxy docker network
@@ -93,18 +93,6 @@
       ${pkgs.docker}/bin/docker network create traefik
     fi
   '';
-
-  # Beszel container for system monitoring
-  my-containers.beszel-agent = {
-    enable = true;
-    sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3";
-  };
-
-  # Home Assistant container
-  # my-containers.home-assistant.enable = true;
-
-  # Zigbee2MQTT container
-  # my-containers.zigbee2mqtt.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
