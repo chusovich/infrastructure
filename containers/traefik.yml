@@ -31,8 +31,8 @@ services:
       # - 8080:8080
     networks:
       traefik:
-    environment:
-      CF_DNS_API_TOKEN: "" # Jok78JgWv3UaNFkfHTOqN7bkFE37oB9CI0rwH8BY
+    # environment:
+    #   CF_DNS_API_TOKEN: "" # Jok78JgWv3UaNFkfHTOqN7bkFE37oB9CI0rwH8BY
     volumes:
       - /home/calebh/certs:/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
