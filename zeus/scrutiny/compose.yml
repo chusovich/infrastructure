@@ -10,8 +10,8 @@ services:
     #   - "8086:8086" # influxDB admin
     volumes:
       - /run/udev:/run/udev:ro
-      - ./config:/opt/scrutiny/config
-      - ./influxdb:/opt/scrutiny/influxdb
+      - /home/calebh/app-data/scrutiny/config:/opt/scrutiny/config
+      - /home/calebh/app-data/scrutiny/influxdb:/opt/scrutiny/influxdb
     devices:
       - "/dev/sda"
       - "/dev/sdb"
