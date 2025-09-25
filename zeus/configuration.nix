@@ -21,6 +21,7 @@
   boot.zfs.extraPools = [ "media-pool" ];
   services.zfs.autoScrub.enable = true;
 
+  # Network Configuration
   networking = {
     firewall.enable = false;
     hostName = "zeus";
@@ -50,6 +51,8 @@
   nix.settings.trusted-users = [
     "builder"	
   ];
+
+  # services.prometheus.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

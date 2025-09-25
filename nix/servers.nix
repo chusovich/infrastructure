@@ -41,13 +41,13 @@
     };
   };  
 
-  # Ensure docker network "traefik" exists
-  system.activationScripts.createDockerNetworkTraefik = ''
-  if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
-    echo "Network exists"
-  else
-    ${pkgs.docker}/bin/docker network create traefik
-  fi
-  '';
+  # # Ensure docker network "traefik" exists
+  # system.activationScripts.createDockerNetworkTraefik = ''
+  # if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
+  #   echo "Network exists"
+  # else
+  #   ${pkgs.docker}/bin/docker network create traefik
+  # fi
+  # '';
 
 }
