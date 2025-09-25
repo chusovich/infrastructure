@@ -10,6 +10,7 @@
       ./hardware-configuration.nix # Include the results of the hardware scan.
       /home/calebh/infrastructure/nix/housekeeping.nix # includ maintenance stuff (auto updates, cleanup, etc.) 
       /home/calebh/infrastructure/nix/servers.nix # basic server config (default user, docker, git, etc.)
+      /home/calebh/infrastructure/nix/prometheus-exporter.nix # basic server config (default user, docker, git, etc.)
     ];
 
   # Bootloader.
@@ -51,8 +52,6 @@
   nix.settings.trusted-users = [
     "builder"	
   ];
-
-  # services.prometheus.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
