@@ -45,6 +45,21 @@
     nameservers = [ "192.168.10.1" ];
   };
 
+  # Promethues
+  services.prometheus = {
+    enable = true;
+
+    scrapeConfigs = [
+      {
+        job_name = "atlas";
+        static_configs = [{
+          targets = [ "127.0.0.1:9100" ];
+        }];
+      }
+    ];
+
+  };
+
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.

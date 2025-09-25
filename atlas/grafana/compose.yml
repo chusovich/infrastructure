@@ -1,0 +1,9 @@
+services:
+  grafana:
+    image: grafana/grafana # Or grafana/grafana for open-source version
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000 # Maps host port 3000 to container port 3000
+    # volumes:
+    #   - /home/calebh/app-data/grafana:/var/lib/grafana # For persistent storage of data and configurations
