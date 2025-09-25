@@ -11,14 +11,11 @@
       ../nix/housekeeping.nix
     ];
 
-  # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   # Build on a remote host
   nix.distributedBuilds = true;
   nix.buildMachines = [
     {
-      hostName = "app-server";
+      hostName = "zeus";
       sshUser = "builder";
       system = "x86_64-linux";
     }

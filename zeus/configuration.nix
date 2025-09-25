@@ -6,8 +6,10 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [ 
+      ./hardware-configuration.nix # Include the results of the hardware scan.
+      /home/calebh/infrastructure/nix/housekeeping.nix # includ maintenance stuff (auto updates, cleanup, etc.) 
+      /home/calebh/infrastructure/nix/servers.nix # basic server config (default user, docker, etc.)
     ];
 
   # Bootloader.
@@ -19,97 +21,36 @@
   boot.zfs.extraPools = [ "media-pool" ];
   services.zfs.autoScrub.enable = true;
 
-  # Networking
   networking = {
-    networkmanager.enable = true;
-    hostName = "zeus";
-    hostId = "4e24220d"; # for ZFS
     firewall.enable = false;
+    hostName = "zeus";
+    hostId = "4e24220d"; # so ZFS can identify the server
+    interfaces = {
+      enp1s0 = {
+        useDHCP = false;
+        ipv4.addresses = [ {
+          address = "192.168.10.124";
+          prefixLength = 24;
+        } ];
+      };
+    };
+    defaultGateway = "192.168.10.1";
+    nameservers = [ "192.168.10.1" ];
   };
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.calebh = {
-    isNormalUser = true;
-    description = "Caleb Husovich";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [];
-  };
-
+  # Remote builder user
   users.users.builder = {
     isNormalUser = true;
-    description = "nixos builder";
+    description = "nixos remote builder";
     extraGroups = [ ];
     packages = with pkgs; [];
   };
 
+  # Allow this machien to be used as a remote builder (?)
   nix.settings.trusted-users = [
     "builder"	
   ];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    wget
-    git
-  ];
-
-  # Enable cron
-  services.cron.enable = true;
-  
-  # services.restic = {
-  #   server.enable = true;
-  #   backups = {
-  #     localbackup = {
-  #       exclude = [
-  #         "/home/*/.cache"
-  #       ];
-  #       initialize = true;
-  #       passwordFile = "/etc/nixos/secrets/restic-password";
-  #       paths = [
-  #         "/home"
-  #       ];
-  #       repository = "/";
-  #     };
-  #   };
-  # };
-
-  # run strava import cron job (every monday at 3:30am)
-  services.cron.systemCronJobs = [
-    "30 3 * * 1 /home/calebh/infra/cmh-stats-for-strava/import-script.sh"
-  ];
-
-  # SSH
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "yes";
-    };
-  };
-  
-  # Tailscale
-  services.tailscale = {
-    enable = true;
-    authKeyFile = "/home/calebh/secrets/tailscale_key";
-    extraUpFlags = [
-      "--reset"
-      "--ssh"
-      "--advertise-tags tag:server"
-    ];
-  };
-
-  # Virtualization
-  virtualisation.docker = {
-    enable = true;
-    autoPrune = {
-      enable = true;
-      dates = "weekly";
-    };
-  };
-  
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
