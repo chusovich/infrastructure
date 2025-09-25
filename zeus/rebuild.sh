@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Step 1: Build NixOS flake
+# Step 1: Build NixOS
 echo "🔨 Building NixOS configuration..."
 cp /home/calebh/infrastructure/zeus/configuration.nix /etc/nixos/configuration.nix
 cp /home/calebh/infrastructure/zeus/hardware-configuration.nix /etc/nixos/hardware-configuration.nix

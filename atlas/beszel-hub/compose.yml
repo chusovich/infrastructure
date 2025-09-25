@@ -1,0 +1,12 @@
+services:
+  beszel-hub:
+    extends:
+      file: /home/calebh/infrastructure/containers/beszel-hub.yml
+      service: beszel-hub
+    labels:
+      traefik.http.routers.beszel-web.rule: Host(`beszel.services.husovich.com`)
+      traefik.http.routers.beszel-websecure.rule: Host(`beszel.services.husovich.com`)
+
+networks:
+  traefik:
+    external: true

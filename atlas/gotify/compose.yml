@@ -1,0 +1,22 @@
+services:
+  gotify:
+    extends:
+      file: /home/calebh/infrastructure/containers/gotify.yml
+      service: gotify
+    image: gotify/server-arm64 # running on raspberry pi
+    labels:
+      traefik.http.routers.gotify.rule: Host(`gotify.services.husovich.com`)
+      traefik.http.routers.gotify-secure.rule: Host(`gotify.services.husovich.com`)
+
+  igotify:
+    extends:
+      file: /home/calebh/infrastructure/containers/gotify.yml
+      service: igotify
+    labels:
+      traefik.http.routers.igotify.rule: Host(`igotify.services.husovich.com`)
+      traefik.http.routers.igotify-secure.rule: Host(`igotify.services.husovich.com`)
+
+networks:
+  gotify:
+  traefik:
+    external: true

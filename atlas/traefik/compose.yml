@@ -1,0 +1,36 @@
+services:
+  # Traefik Reverse Proxy
+  traefik:
+    extends: 
+      file: /home/calebh/infrastructure/containers/traefik.yml
+      service: traefik
+    profiles:
+      - proxy
+      - proxy-debug
+    environment:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/cf-dns-api-token
+    secrets:
+      - cf-dns-api-token
+    labels:
+      traefik.http.routers.traefik-secure.tls.domain[0].sans: "*.services.husovich.com"
+      traefik.http.routers.traefik.rule: Host(`traefik.services.husovich.com`)
+      traefik.http.routers.traefik-secure.rule: Host(`traefik.services.husovich.com`)
+
+  # Traefik Debugging Container
+  whoami:
+    extends:
+      file: /home/calebh/infrastructure/containers/traefik.yml
+      service: whoami
+    profiles:
+      - proxy-debug
+    labels:
+      traefik.http.routers.whoami-web.rule: Host(`whoami.services.husovich.com`)
+      traefik.http.routers.whoami-websecure.rule: Host(`whoami.services.husovich.com`)
+
+secrets:
+  cf-dns-api-token:
+    file: /home/calebh/secrets/CF_DNS_API_TOKEN
+
+networks:
+  traefik:
+    external: true

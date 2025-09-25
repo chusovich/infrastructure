@@ -8,17 +8,15 @@
   imports =
     [ 
       ./hardware-configuration.nix # Include the results of the hardware scan.
-      ../nix/housekeeping.nix # auto-updates, garbage collection
+      /home/calebh/infrastructure/nix/housekeeping.nix # auto-updates, garbage collection
+      /home/calebh/infrastructure/nix/servers.nix # auto-updates, garbage collection
     ];
 
-  # Enable flakes
-  # nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Build on a remote host
+  # Build on a remote host since the pi is underpowered
   nix.distributedBuilds = true;
   nix.buildMachines = [
     {
-      hostName = "app-server";
+      hostName = "zeus";
       sshUser = "builder";
       system = "aarch64-linux";
     }
@@ -29,8 +27,7 @@
   # Enables the generation of /boot/extlinux/extlinux.conf
   boot.loader.generic-extlinux-compatible.enable = true;
 
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # Network Configuration
   networking = {
     firewall.enable = false;
     hostName = "atlas";
@@ -46,55 +43,6 @@
     defaultGateway = "192.168.10.1";
     nameservers = [ "192.168.10.1" ];
   };
-
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.calebh = {
-    isNormalUser = true;
-    extraGroups = [ "network manager" "wheel" "docker" ]; # Enable ‘sudo’ for the user and add to the docker group
-    packages = with pkgs; [ ];
-  };
-
-  # List packages installed in system profile.
-  environment.systemPackages = with pkgs; [
-    git
-  ];
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # Enable Tailscale
-  services.tailscale = {
-    enable = true;
-    authKeyFile = "/home/calebh/secrets/tailscale_key";
-    extraUpFlags = [
-      "--ssh"
-      "--reset"
-      "--advertise-tags tag:server"
-    ];
-  };
-
-  # Virtualization
-  virtualisation.docker = {
-    enable = true;
-    autoPrune = {
-      enable = true;
-      dates = "weekly";
-    };
-  };
-
-  # Ensure docker network "traefik" exists
-  system.activationScripts.createDockerNetworkTraefik = ''
-  if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
-    echo "Network exists"
-  else
-    ${pkgs.docker}/bin/docker network create traefik
-  fi
-  '';
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

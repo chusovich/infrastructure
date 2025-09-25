@@ -9,7 +9,7 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./gotify-data:/app/data
+      - /home/calebh/app-data/gotify:/app/data
     environment:
       GOTIFY_DEFAULTUSER_PASS: password   # Change me!!!!!
       GOTIFY_REGISTRATION: false
@@ -39,7 +39,7 @@ services:
       - no-new-privileges:true
     pull_policy: always
     volumes:
-      - ./igotify-data:/app/data  
+      - /home/calebh/app-data/igotify:/app/data  
     labels:
       traefik.docker.network: traefik
       traefik.enable: "true"
