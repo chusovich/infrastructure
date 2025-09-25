@@ -9,7 +9,7 @@
     [ 
       ./hardware-configuration.nix # Include the results of the hardware scan.
       /home/calebh/infrastructure/nix/housekeeping.nix # includ maintenance stuff (auto updates, cleanup, etc.) 
-      /home/calebh/infrastructure/nix/servers.nix # basic server config (default user, docker, etc.)
+      /home/calebh/infrastructure/nix/servers.nix # basic server config (default user, docker, git, etc.)
     ];
 
   # Bootloader.

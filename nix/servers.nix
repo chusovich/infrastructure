@@ -12,11 +12,6 @@
     packages = with pkgs; [ git ];
   };
 
-  # Git
-  environment.systemPackages = with pkgs; [
-    git
-  ];
-
   # SSH
   services.openssh = {
     enable = true;
