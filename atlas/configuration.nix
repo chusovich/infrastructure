@@ -10,6 +10,7 @@
       ./hardware-configuration.nix # Include the results of the hardware scan.
       /home/calebh/infrastructure/nix/housekeeping.nix # auto-updates, garbage collection
       /home/calebh/infrastructure/nix/servers.nix # auto-updates, garbage collection
+      /home/calebh/infrastructure/nix/prometheus-exporter.nix # expose stats to prometheus
     ];
 
   # Build on a remote host since the pi is underpowered
