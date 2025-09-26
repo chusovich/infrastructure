@@ -1,0 +1,16 @@
+scrape_configs:
+  - job_name: esphome
+    basic_auth:
+      username: "admin"
+      password_file: "/esphome_web_passwd"
+    static_configs:
+      - targets:
+          - "192.168.10.193"
+          - "192.168.10.237"
+
+  - job_name: servers
+    static_configs:
+      - targets:
+          - "192.168.10.56:9100" # atlas
+          - "192.168.10.124:9100" #hephaestus
+          - "192.168.10.167:9100" #zeus
