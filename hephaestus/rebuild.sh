@@ -4,16 +4,17 @@ set -euo pipefail
 
 # Step 1: Build NixOS flake
 echo "🔨 Building NixOS configuration..."
-nixos-rebuild switch -I nixos-config=/home/calebh/infrastructure/hephaestus/configuration.nix
+cp configuration.nix /etc/nixos/configuration.nix
+nixos-rebuild switch 
 
 # Step 2: Commit any changes in current Git repo
 echo "📦 Committing changes to Git..."
-git add .
+git add --all
 gen=$(nixos-rebuild list-generations | grep current)
-git commit -m "Commting generation $gen" || echo "Nothing to commit."
+git commit -m "Commting hephaestus generation $gen" || echo "Nothing to commit."
 
 # Step 3: Run garbage collection
-# echo "🧹 Running Nix garbage collection..."
-# sudo nh clean all --keep 5
+echo "🧹 Running Nix garbage collection..."
+nix-collect-garbage
 
 echo "✅ Done!"

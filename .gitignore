@@ -1,6 +1,0 @@
-# ignore all folders named "secrets" and "certs"
-**/secrets/
-**/certs
-
-# ignore docker volumes for atlas
-/atlas/data

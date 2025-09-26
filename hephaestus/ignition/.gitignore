@@ -1,3 +1,0 @@
-/db-data # maria-db data
-/gw-data # ignition gateway data
-/secrets # passwords for gateway and database

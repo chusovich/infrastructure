@@ -3,5 +3,3 @@ services:
     extends: 
       file: /home/calebh/infrastructure/containers/beszel-agent.yml
       service: beszel-agent
-    environment:
-      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnHQnhcqN9EfGocDO0G/jJXOGvJ5bS/fHLXGrbxvGxn"

@@ -8,7 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../nix/housekeeping.nix
+      /home/calebh/infrastructure/nix/housekeeping.nix
+      /home/calebh/infrastructure/nix/servers.nix
+      /home/calebh/infrastructure/nix/prometheus-exporter.nix
     ];
 
   # Build on a remote host
@@ -25,6 +27,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Netwoking
   networking = {
     firewall.enable = false;
     hostName = "hephaestus";
@@ -40,57 +43,6 @@
     defaultGateway = "192.168.10.1";
     nameservers = [ "192.168.10.1" ];
   };
-  
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.calebh = {
-    isNormalUser = true;
-    description = "Caleb Husovich";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [];
-  };
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    git
-  ];
-
-  # Virtualization
-  virtualisation = {
-    docker = {
-      enable = true;
-      autoPrune = {
-        enable = true;
-        dates = "weekly";
-      };
-    };
-  };
-
-  # List services that you want to enable:
-  services.openssh.enable = true;
-
-  # Enable Tailscale
-  services.tailscale = {
-    enable = true;
-    authKeyFile = "/home/calebh/secrets/tailscale_key";
-    extraUpFlags = [
-      "--ssh" 
-      "--advertise-tags tag:server"
-      "--reset"
-    ];		
-  };
-
-  # Create remote proxy docker network
-  system.activationScripts.createDockerNetworkTraefik = ''
-    if ${pkgs.docker}/bin/docker network inspect traefik >/dev/null 2>&1; then
-      echo "Network exists"
-    else
-      ${pkgs.docker}/bin/docker network create traefik
-    fi
-  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

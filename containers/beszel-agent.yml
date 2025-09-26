@@ -10,4 +10,4 @@ services:
       # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
     environment:
       LISTEN: 45876
-      # KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPgtznNNS8GQ0UekE1LM8Cw3X4GjrCprsoIzfdbR6ZI3"
+      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnHQnhcqN9EfGocDO0G/jJXOGvJ5bS/fHLXGrbxvGxn"
