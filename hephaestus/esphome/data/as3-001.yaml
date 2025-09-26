@@ -1,0 +1,62 @@
+substitutions:
+  device_name: AS3-001
+
+esphome:
+  name: as3-001
+  friendly_name: AS3-001
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+    
+output:
+  - platform: ledc
+    pin: GPIO5
+    frequency: 1000 hz
+    id: pwm_outputg22
+    max_power: 0.50
+    # inverted: true
+
+binary_sensor:
+  - platform: gpio 
+    id: button   
+    pin:
+      number: GPIO41
+      mode:
+        input: true
+        pullup: true
+    on_press:
+      - light.toggle: led_strip
+  - platform: status
+    name: "Status"
+
+light:
+  - platform: monochromatic
+    output: pwm_outputg22
+    default_transition_length: 0.5s
+    gamma_correct: 1.0
+    name: "LED Strip"
+    id: led_strip
+
+packages:
+  remote_package_files:
+      url: https://github.com/chusovich/esphome-reuse
+      files:
+        - path: wifi.yaml
+          vars:
+            wifi_ssid: !secret wifi_ssid
+            wifi_password: !secret wifi_password
+            ap_password: !secret ap_password
+        - path: device-base.yaml
+          vars:
+            mqtt_username: !secret mqtt_username
+            mqtt_password: !secret mqtt_password
+            ota_password: !secret ota_password
+            web_server_password: !secret web_server_password
+            web_server_username: !secret web_server_username
+      ref: main  # optional
+      refresh: 1min  # optional
+
+logger:
+    

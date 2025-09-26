@@ -1,0 +1,32 @@
+esphome:
+  name: esp32-micromod
+  friendly_name: ESP32 MicroMod
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "ZAlZPXzQ7cgzyNG74sa6Rojbs7U5FwKxvPbahmdGiKA="
+
+ota:
+  - platform: esphome
+    password: "1356ef99da27c614ede313c530392c82"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32-Micromod Fallback Hotspot"
+    password: "P7IecEblggB5"
+
+captive_portal:
+    

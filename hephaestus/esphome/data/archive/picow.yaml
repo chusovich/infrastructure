@@ -1,0 +1,23 @@
+esphome:
+  name: picow
+  friendly_name: PicoW
+
+rp2040:
+  board: rpipicow
+
+# Enable logging
+logger:
+
+ota:
+  - platform: esphome
+    password: "540451a89013943c02b03f8173e0c1a2"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot in case wifi connection fails
+  ap:
+    ssid: "Picow Fallback Hotspot"
+    password: "pubwCNahYXgw"
+    

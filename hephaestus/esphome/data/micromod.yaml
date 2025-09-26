@@ -1,0 +1,32 @@
+substitutions:
+  device_name: micromod
+  sensor_update_interval: 20s
+
+esphome:
+  name: micromod
+  friendly_name: MicroMod
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+i2c: 
+  sda: GPIO21
+  scl: GPIO22
+
+packages:
+  remote_package_files:
+      url: https://github.com/chusovich/esphome-reuse
+      files:
+        - path: sensors/aht2x.yaml
+        - path: ethernet.yaml
+        - path: device-base.yaml
+          vars:
+            mqtt_username: !secret mqtt_username
+            mqtt_password: !secret mqtt_password
+            ota_password: !secret ota_password
+            web_server_password: !secret web_server_password
+            web_server_username: !secret web_server_username
+      ref: main  # optional
+      refresh: 1min  # optional    
