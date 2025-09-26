@@ -5,7 +5,7 @@ set -euo pipefail
 # Step 1: Build NixOS
 echo "🔨 Building NixOS configuration..."
 cp /home/calebh/infrastructure/artemis/configuration.nix /etc/nixos/configuration.nix
-cp /home/calebh/infrastructure/artemis/hardware-configuration.nix /etc/nixos/hardware-configuration.nix
+# cp /home/calebh/infrastructure/artemis/hardware-configuration.nix /etc/nixos/hardware-configuration.nix
 sudo nixos-rebuild switch 
 
 # Step 2: Commit any changes in current Git repo
