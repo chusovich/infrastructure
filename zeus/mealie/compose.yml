@@ -32,7 +32,9 @@ services:
       SMTP_AUTH_STRATEGY: TLS
       SMTP_FROM_EMAIL: husovichbot@gmail.com
       SMTP_USER: husovichbot@gmail.com
-      SMTP_PASSWORD: tkdy gaad aakc hurh
+      SMTP_PASSWORD_FILE: /run/secrets/google-app-password 
+    secrets:
+      - google-app-password
     depends_on:
       postgres:
         condition: service_healthy
@@ -69,9 +71,9 @@ services:
       timeout: 20s
       retries: 3
 
-# volumes:
-#   mealie-data:
-#   mealie-pgdata:
+secrets:
+  google-app-password:
+    file: /home/calebh/secrets/GOOGLE_APP_PASSWORD
 
 networks:
   mealie:
