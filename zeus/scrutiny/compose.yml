@@ -25,12 +25,12 @@ services:
       - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
       - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
       # HTTPS
-      - traefik.http.routers.scrutiny-https.rule=Host(`scrutiny.apps.husovich.com`)
+      - traefik.http.routers.scrutiny-https.rule=Host(`drives.apps.husovich.com`)
       - traefik.http.routers.scrutiny-https.entrypoints=https
       - traefik.http.routers.scrutiny-https.tls=true
       - traefik.http.routers.scrutiny-https.service=scrutiny
       # HTTP
-      - traefik.http.routers.scrutiny-http.rule=Host(`scrutiny.apps.husovich.com`)
+      - traefik.http.routers.scrutiny-http.rule=Host(`drives.apps.husovich.com`)
       - traefik.http.routers.scrutiny-http.entrypoints=http
       - traefik.http.routers.scrutiny-http.middlewares=redirect-https
       - traefik.http.routers.scrutiny-http.service=scrutiny

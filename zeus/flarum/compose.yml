@@ -1,0 +1,56 @@
+services:
+  flarum:
+    image: mondedie/flarum:stable
+    container_name: flarum
+    env_file:
+      - ./flarum.env
+    volumes:
+      - /home/calebh/app-data/flarum/assets:/flarum/app/public/assets
+      - /home/calebh/app-data/flarum/extensions:/flarum/app/extensions
+      - /home/calebh/app-data/flarum/storage/logs:/flarum/app/storage/logs
+      - /home/calebh/app-data/flarum/nginx:/etc/nginx/flarum
+    # ports:
+    #   - 3333:8888
+    depends_on:
+      - mariadb
+    networks:
+      traefik:
+      flarum:
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      # HTTP
+      - traefik.http.routers.flarum-http.rule=Host(`forum.apps.husovich.com`)
+      - traefik.http.routers.flarum-http.entrypoints=http
+      - traefik.http.routers.flarum-http.service=flarum
+      - traefik.http.routers.flarum-http.middlewares=redirect-https
+      # HTTP Redirect
+      - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
+      # HTTPS
+      - traefik.http.routers.flarum-https.rule=Host(`forum.apps.husovich.com`)
+      - traefik.http.routers.flarum-https.entrypoints=https
+      - traefik.http.routers.flarum-https.service=flarum
+      - traefik.http.routers.flarum-https.tls=true
+      - traefik.http.routers.flarum-https.tls.certresolver=myresolver
+      # Load Balancer      
+      - traefik.http.services.flarum.loadbalancer.server.port=8888
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: mariadb
+    hostname: mariabdb
+    environment:
+      - MYSQL_ROOT_PASSWORD=dbpassword
+      - MYSQL_DATABASE=flarum
+      - MYSQL_USER=flarum
+      - MYSQL_PASSWORD=dbpassword
+    volumes:
+      - /home/calebh/app-data/flarum/mysql/db:/var/lib/mysql
+    networks:
+      - flarum
+
+networks:
+  flarum:
+  traefik:
+    external: true  

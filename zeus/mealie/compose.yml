@@ -1,6 +1,6 @@
 services:
   mealie:
-    image: ghcr.io/mealie-recipes/mealie:v2.8.0 # 
+    image: ghcr.io/mealie-recipes/mealie:v3.2.1 # 
     container_name: mealie
     restart: always
     #ports:
@@ -10,7 +10,7 @@ services:
         limits:
           memory: 1000M # 
     volumes:
-      - mealie-data:/app/data/
+      - /home/calebh/app-data/mealie/app:/app/data/
     environment:
       # Set Backend ENV Variables Here
       ALLOW_SIGNUP: "false"
@@ -25,6 +25,14 @@ services:
       POSTGRES_SERVER: postgres
       POSTGRES_PORT: 5432
       POSTGRES_DB: mealie
+      # Email Settings
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_FROM_NAME: Mealie
+      SMTP_AUTH_STRATEGY: TLS
+      SMTP_FROM_EMAIL: husovichbot@gmail.com
+      SMTP_USER: husovichbot@gmail.com
+      SMTP_PASSWORD: tkdy gaad aakc hurh
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,27 +53,27 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:15
+    image: postgres:17
     restart: always
     volumes:
-      - mealie-pgdata:/var/lib/postgresql/data
+      - /home/calebh/app-data/mealie/pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: mealie
       POSTGRES_USER: mealie
       PGUSER: mealie
+    networks:
+      mealie:
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 30s
       timeout: 20s
       retries: 3
-    networks:
-      mealie:
 
-volumes:
-  mealie-data:
-  mealie-pgdata:
+# volumes:
+#   mealie-data:
+#   mealie-pgdata:
 
 networks:
+  mealie:
   traefik:
     external: true  
-  mealie:
