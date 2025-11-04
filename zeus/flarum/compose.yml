@@ -2,6 +2,7 @@ services:
   flarum:
     image: mondedie/flarum:stable
     container_name: flarum
+    restart: unless-stopped
     env_file:
       - ./flarum.env
     volumes:
@@ -40,6 +41,7 @@ services:
     image: mariadb:10.5
     container_name: mariadb
     hostname: mariabdb
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=dbpassword
       - MYSQL_DATABASE=flarum
